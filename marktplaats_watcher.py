@@ -57,7 +57,7 @@ HEADERS = {
     "Accept-Language": "nl-NL,nl;q=0.9",
 }
 
-RESULTATEN_PER_ZOEKOPDRACHT = 30   # nieuwste 30 advertenties per check
+RESULTATEN_PER_ZOEKOPDRACHT = 100  # nieuwste 100 advertenties per check
 MAX_ONTHOUDEN = 500                # zoveel advertentie-id's per zoekopdracht bewaren
 MAX_BERICHTEN = 10                 # max losse berichten per zoekopdracht per run
 PAUZE_TUSSEN_BERICHTEN = 1.1       # Telegram staat ~1 bericht per seconde toe
