@@ -362,10 +362,10 @@ class Telegram:
 
         self._naar_iedereen(stuur_een)
 
-    def overzicht(self, groepen: list) -> None:
+    def overzicht(self, groepen: list, kop: str | None = None) -> None:
         """Eén bericht met alle nieuwe advertenties van deze check (zo nodig in delen)."""
         totaal = sum(len(advs) for _, advs in groepen)
-        blokken = [f"<b>{totaal} nieuwe advertentie{'s' if totaal != 1 else ''}</b>"]
+        blokken = [kop or f"<b>{totaal} nieuwe advertentie{'s' if totaal != 1 else ''}</b>"]
         for z, advs in groepen:
             blokken.append(f"\n<b>{html.escape(z['naam'])}</b>")
             for a in advs:
@@ -619,6 +619,16 @@ def main() -> int:
         except TelegramFout as e:
             telegram_fout = True
             log(f"  FOUT bij versturen van het overzicht: {e}")
+
+    if os.environ.get("VOORBEELD") == "true" and not telegram_fout:
+        try:
+            groepen = [(z, zoek_marktplaats(z)[:3]) for z in zoekopdrachten]
+            tg.overzicht(groepen, kop="<b>Testbericht</b>: de watcher werkt. Zo ziet een "
+                                      "melding eruit (de 3 nieuwste per zoekopdracht):")
+            log("Testbericht verstuurd.")
+        except (TelegramFout, urllib.error.HTTPError) as e:
+            telegram_fout = True
+            log(f"  Testbericht mislukt: {e}")
 
     # Zoekopdrachten die uit het bestand zijn gehaald ook uit het geheugen halen
     namen = {z["naam"] for z in laad_zoekopdrachten_alle()}
