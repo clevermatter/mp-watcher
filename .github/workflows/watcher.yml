@@ -8,6 +8,11 @@ on:
     - cron: "7,37 * * * *"
   # Hiermee kun je hem ook met de hand starten via de Actions-tab
   workflow_dispatch:
+    inputs:
+      voorbeeld:
+        description: "Stuur ook een testbericht met de nieuwste advertenties"
+        type: boolean
+        default: false
 
 permissions:
   contents: write   # nodig om gezien.json op te slaan
@@ -29,6 +34,7 @@ jobs:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           AUTOMATISCH: ${{ github.event_name == 'schedule' }}
+          VOORBEELD: ${{ inputs.voorbeeld }}
         run: python3 marktplaats_watcher.py
 
       - name: Onthouden wat al gemeld is
